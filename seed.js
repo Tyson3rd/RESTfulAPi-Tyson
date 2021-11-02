@@ -3,22 +3,36 @@ const fs = require('fs').promises;
 const bcrypt = require('bcrypt');
 
 const {sequelize} = require('./db');
-const {User, Item} = require('./models');
+const {User, Membership} = require('./models');
 
 const createUsers = async () => {
     const users = [
-        {name : 'Dan', password: '1234'},
-        {name : 'Linda', password : 'password'}
+        {name : 'Tyson', password: 'ty212'},
+        {name : 'James', password : 'ja275'},
+        {name : 'Antony', password: 'an649'},
+        {name : 'Chad', password: 'ch275'},
+        {name : 'Sharon', password: 'sh515'},
+        {name : 'Mushfika', password: 'mu298'},
+        {name : 'Stanley', password: 'st998'},
     ];
 
     return users
 }
 
 
-const items = [
-    {name : 'Gold'},
-    {name : 'Silver'},
-    {name : 'Paladium'}
+const memberships = [
+    {
+        name : 'Platinum',
+        price : 100.00
+    },
+    {
+        name : 'Gold',
+        price : 80.00
+    },
+    {
+        name : 'Silver',
+        price : 60.00
+    }
 ];
 
 
@@ -29,8 +43,8 @@ const seed = async () => {
     const users = await createUsers(); // create users w/ encrypted passwords
 
     const userPromises = users.map(user => User.create(user))
-    const itemPromises = items.map(item => Item.create(item))
-    await Promise.all([...userPromises, ...itemPromises]);
+    const membershipPromises = memberships.map(membership => Membership.create(membership))
+    await Promise.all([...userPromises, ...membershipPromises]);
     console.log("db populated!")
 }
 
