@@ -3,15 +3,16 @@ GET http://localhost:3000/
 GET http://localhost:3000/Memberships/
 ###
 POST http://localhost:3000/Memberships
-Content-Type: application/json
+content-type: application/json
+
 {
     "name" : "bronze",
     "price" : 20.00
 }
 ###
-PUT http://localhost:3000/Users
+PUT http://localhost:3000/memberships
 ###
-DELETE http://localhost:3000/memberships/1
+DELETE http://localhost:3000/memberships/4
 ###
  
 #  **************CRUD**************
