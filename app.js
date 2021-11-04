@@ -3,6 +3,7 @@ const basicAuth = require('express-basic-auth');
 const bcrypt = require('bcrypt');
 
 const {User, Membership} = require('./models');
+// const { regexp } = require("sequelize/types/lib/operators");
 
 // initialise Express
 const app = express();
@@ -62,8 +63,24 @@ app.put('/memberships/:id', async(req, res)=> {
   res.json({updatedMembership})
 })
 
+// app request that sends "Authorized!!!" only with the attached api-key
+app.get('/auth-endpoint', (req, res) => {
+  if(req.headers.authorization && regexp.headers.authorization == 'my-api-key-321') {
+    res.send("Authorized!!!")
+  } else {
+    res.status(401).send();
+  }
+})
+// 1st app listening on port 3000
 app.listen(3000, () => {
   console.log("Server running on port 3000");
+})
+// 2nd app requesr with a single get request in the route, listening on port 8080
+const app2 = express();
+// app2.use(bodyParser.json());
+app2.get("/", (req, res) => res.send("Bet You Didn't Think I Could Change Environments On Your A**!!! ;-D "))
+app2.listen(8080, () => {
+  console.log("Server running on port 8080");
 });
 
 ////////////////////////////////////////////////////////////////////////

@@ -5,8 +5,10 @@ const bcrypt = require('bcrypt');
 const {sequelize} = require('./db');
 const {User, Membership} = require('./models');
 
-const createUsers = async () => {
 
+
+
+const createUsers = async () => {
     let pw1 = await bcrypt.hash('ty212', 2);
     let pw2 = await bcrypt.hash('ja275', 2);
     let pw3 = await bcrypt.hash('an649', 2);
@@ -15,7 +17,6 @@ const createUsers = async () => {
     let pw6 = await bcrypt.hash('mu298', 2);
     let pw7 = await bcrypt.hash('st998', 2);
 
-const createUsers = async () => {
     const users = [
         {name : 'Tyson', password: pw1 },
         {name : 'James', password : pw2 },
