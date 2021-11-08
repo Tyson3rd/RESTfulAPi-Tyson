@@ -1,15 +1,70 @@
 const express = require("express");
-const basicAuth = require('express-basic-auth');
+// const basicAuth = require('express-basic-auth');
 const bcrypt = require('bcrypt');
 
+//Boilerplate dependencies for Auth0
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const cors = require('cors'); 
+
+
+require('dotenv').config('.env');
+
 const {User, Membership} = require('./models');
-// const { regexp } = require("sequelize/types/lib/operators");
 
 // initialise Express
 const app = express();
 
+//allow cross-origin resource sharing
+app.use(cors());
+
 // specify out request bodies are json
 app.use(express.json());
+
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+//basic auth needs a config object
+// app.use('/sensitive', basicAuth({
+// app.use(basicAuth({
+//   authorizer : dbAuthorizer, //custom authorizer fn
+//   authorizeAsync: true, //allow our authorizer to be async
+//   unauthorizedResponse : () => 'Did You Really Think It Would Be That Easy!!!?'
+// }))
+
+// //compares username + password with what's in the database
+// // Returns boolean indicating if password matches
+// async function dbAuthorizer(username, password, callback){
+//   try {
+//     // get user from DB
+//     const user = await User.findOne({where : {name : username}})
+//     // isValid == true if user exists and passwords match, false if no user or passwords don't match
+//     let isValid = (user != null) ? await bcrypt.compare(password, user.password) : false;
+//     callback(null, isValid); //callback expects null as first argument
+//   } catch(err) {
+//     console.log("OH NO AN ERROR!", err)
+//     callback(null, false);
+//   }
+// }
+
+//JWT Boilerplate
+
+const checkJwt = jwt({
+  secret: jwks.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: 'https://dev-5v02gagg.us.auth0.com/.well-known/jwks.json'
+}),
+audience: 'tysonDemo',
+issuer: 'https://dev-5v02gagg.us.auth0.com/',
+algorithms: ['RS256']
+});
+
+
+
+////////////////////////////////////////////////////////
+// const { regexp } = require("sequelize/types/lib/operators");
+////////////////////////////////////////////////////////
 
 app.get('/', (req, res,) => {
   res.send('<h1>If You Can See Me, Then I Am Working!!!</h1>')
@@ -21,11 +76,16 @@ app.get('/users', async (req, res) => {
   res.json({users});
 })
 
-app.get('/users/:id', async (req, res) => {
+// app.get('/users/:id', async (req, res) => {
+//   let user = await User.findByPk(req.params.id);
+//   res.json({user});
+// })
+
+//*****checkJwt checkJwt  checkJwt  checkJwt  checkJwt *****
+app.get('/users/:id', checkJwt, async (req, res) => {
   let user = await User.findByPk(req.params.id);
   res.json({user});
 })
-
 // I want to get all memberships
 
 app.get('/memberships', async(req, res)=> {
